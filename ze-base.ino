@@ -1,14 +1,14 @@
 #define LED 13
 
-int Speed = 100;
+int Speed = 204;
 int Speedsec;
 
-//const int freq = 30000;
-//const int pwmChannel = 0;
-//const int resolution = 8;
+const int freq = 30000;
+const int pwmChannel = 0;
+const int resolution = 8;
 
 class DCMotor{
-  int spd = 100, pin1, pin2;
+  int spd = 255, pin1, pin2;
 
   public:
 
@@ -18,9 +18,7 @@ class DCMotor{
       
       pinMode(pin1, OUTPUT);
       pinMode(pin2, OUTPUT);
-
-//      ledcSetup(pwmChannel, freq, resolution);
-
+      ledcSetup(pwmChannel, freq, resolution);
     }
 
     void Speed(int in1){
@@ -28,17 +26,20 @@ class DCMotor{
     }
 
     void Forward(){
-      //quando colocar o pwm trocar o digitalwrite do pin1 para analogwrite
-      digitalWrite(pin1, HIGH); //pin1 gira a roda no sentido horario
+      pinMode(pin1, INPUT);
+      pinMode(pin2, INPUT);
+      analogWrite(pin1, spd); //pin1 gira a roda no sentido horario
       digitalWrite(pin2, LOW); //o pin2 gira a roda no sentido antihorario "para trás"
-      // ledcWrite(pwmChannel, spd); //pwm ativar dps
+//      ledcWrite/(pwmChannel, spd); //pwm ativar dps
     }
 
     void Backward(){
       //quando colocar o pwm trocar o digitalwrite do pin1 para analogwrite
+      pinMode(pin1, INPUT);
+      pinMode(pin2, INPUT);
       digitalWrite(pin1, LOW); //pin1 gira a roda no sentido horario
-      digitalWrite(pin2, HIGH); //o pin2 gira a roda no sentido antihorario "para trás"
-      // ledcWrite(pwmChannel, spd); //pwm ativar dps
+      analogWrite(pin2, spd); //o pin2 gira a roda no sentido antihorario "para trás"
+//     ledcWrite(pwmChannel, spd/); //pwm ativar dps
     }
 
     void Stop() { // Stop é o metodo para fazer o motor ficar parado.
@@ -51,35 +52,63 @@ class DCMotor{
 DCMotor LeftMotorFront, LeftMotorRear, RightMotorFront, RightMotorRear; //criando os 4 motores(rodas), que vão receber os metodos acima
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   LeftMotorFront.pinOut(26, 25);
   LeftMotorRear.pinOut(17, 16);
   RightMotorFront.pinOut(19, 18);
-  RightMotorFront.pinOut(12, 27);
+  RightMotorRear.pinOut(12, 27);
 
   Serial.println("fim setup");
+
+  Stop();
 }
 
 void loop(){
+  
   LeftMotorFront.Speed(Speed);  
-  LeftMotorRear.Speed(Speed);   
-  RightMotorFront.Speed(Speed); 
+  LeftMotorRear.Speed(0);   
+  RightMotorFront.Speed(0); 
   RightMotorRear.Speed(Speed);
 
   forward();
-  delay(2000);
-  back();
-  delay(2000);
-  stop();
   delay(4000);
-  left();
-  delay(1000);
-  stop();
-  delay(3000);
+
+  LeftMotorFront.Speed(0);  
+  LeftMotorRear.Speed(Speed );   
+  RightMotorFront.Speed(Speed ); 
+  RightMotorRear.Speed(0);
+
+  forward();
+  delay(4000);
+  
+//  stop();
+//  delay(1000);
+
+//  left();
+//  delay(2000);
+////  stop();
+////  delay(1000);
+//
+//  back();
+//  delay(2000);
+////  stop();
+////  delay(1000);
+//
+//  right();
+//  delay(2000);
+////  stop();
+////  delay(1000);
+//
+//  forward();
+//  delay(2000);
+//
+//  Stop();
+//  delay(50000);
+
 }
 
-void stop(){
+void Stop(){
     LeftMotorFront.Stop();  // Comando para o motor parar
     LeftMotorRear.Stop();   // Comando para o motor parar
     RightMotorFront.Stop(); // Comando para o motor parar
