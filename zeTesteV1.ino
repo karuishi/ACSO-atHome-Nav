@@ -1,188 +1,211 @@
-// #define LeftMotorFront1 26
-// #define LeftMotorFront2 25
+#define LED 13
 
-// #define LeftMotorRear1 17
-// #define LeftMotorRear2 16
+int SpeedFrontLeft = 150;
+int SpeedFrontRight = 150;
+int SpeedRearLeft = 150;
+int SpeedRearRight = 150;
 
-// #define RightMotorFront1 19
-// #define RightMotorFront2 18
+int MAXSPEED = 255;
 
-// #define RightMotorRear1 12
-// #define RightMotorRear2 27
+int Speedsec;
 
-#define HIGH 100
+const int freq = 30000;
+const int pwmChannel = 0;
+const int pwmChannel2 = 1;
+const int pwmChannel3 = 2;
+const int pwmChannel4 = 3;
+const int resolution = 8;
 
-// dev - Adicionado Classe motor e metodo pinOut com entrada de dados
-class Motor{
+class DCMotor{
+  int spd = 100, pin1, pin2, enable1Pin, pwmChannelForThisMotor;
 
   public:
 
-  void pinOut(int nA, int nB){
-    int pinA = nA;
-    int pinB = nB;
+    void pinOut(int in1, int in2, int en, int pwmChannelForThisMotor)
+    {
+      pin1 = in1;
+      pin2 = in2;
+      enable1Pin = en;
+      this->pwmChannelForThisMotor = pwmChannelForThisMotor;
+      
+      
+      pinMode(pin1, OUTPUT);
+      pinMode(pin2, OUTPUT);
+      pinMode(enable1Pin, OUTPUT);
 
-    pinMode(pinA, OUTPUT);
-    pinMode(pinB, OUTPUT);
-  }
 
-  // dev - criando o forward na classe para ser chamado no loop
+      ledcSetup(this->pwmChannelForThisMotor, freq, resolution);
+      ledcAttachPin(enable1Pin, this->pwmChannelForThisMotor);
 
-  void Forward(){
-    digitalWrite(pinA, HIGH);
-    digitalWrite(pinB, LOW);
-  }
+    }
 
-  // dev - criando o backward na classe para ser chamado no loop
+    void Speed(int in1)
+    {
+      spd = in1;
+    }
 
-  void Backward(){
-    digitalWrite(pinA, LOW);
-    digitalWrite(pinB, HIGH);
-  }
-  
-  void Stop(){
-    digitalWrite(pinA, LOW);
-    digitalWrite(pinB, LOW);
-  }
+    void Forward()
+    {
+      //quando colocar o pwm trocar o digitalwrite do pin1 para analogwrite
+      //analogWrite(pin1, spd);
+      pinMode(pin1, INPUT);
+      pinMode(pin2, INPUT);
+      analogWrite(pin1, spd);
+      digitalWrite(pin2, LOW);
+      ledcWrite(pwmChannel, spd);
+    }
 
+    void Backward()
+    {
+      //quando colocar o pwm trocar o digitalwrite do pin1 para analogwrite
+      //digitalWrite(pin1, LOW); //pin1 gira a roda no sentido horario
+      //digitalWrite(pin1, LOW); //pin1 gira a roda no sentido horario
+      pinMode(pin1, INPUT);
+      pinMode(pin2, INPUT);
+      digitalWrite(pin1, LOW);
+      analogWrite(pin2, spd);
+      ledcWrite(pwmChannel, spd);
+    }
+
+    void Stop() 
+    { // Stop é o metodo para fazer o motor ficar parado.
+      //Serial.println("Motor stopped");
+      pinMode(pin1, INPUT);
+      pinMode(pin2, INPUT);
+      digitalWrite(this->pin1, LOW);
+      digitalWrite(this->pin2, LOW);
+    }
 };
 
-// dev - Adicinado objetos
+DCMotor LeftMotorFront, LeftMotorRear, RightMotorFront, RightMotorRear; //criando os 4 motores(rodas), que vão receber os metodos acima
 
-Motor LeftMotorFront, LeftMotorRear, RightMotorFront, RightMotorRear;
+void setup(){
+  Serial.begin(9600);
+  
+  LeftMotorFront.pinOut(26, 25, 33, pwmChannel);
+  LeftMotorRear.pinOut(17, 16, 4, pwmChannel2);
+  RightMotorFront.pinOut(19, 18, 23, pwmChannel3);
+  RightMotorRear.pinOut(12, 27, 14, pwmChannel4);
 
+  
+  
 
-
-void setup() {
-
-
-  // pinMode(LeftMotorFront1, OUTPUT);
-  // pinMode(LeftMotorFront2, OUTPUT);
-
-  // dev - Inserindo valor a função do metodo pinout
-
-  LeftMotorFront.pinOut(26, 25);
-
-  // pinMode(LeftMotorRear1, OUTPUT);
-  // pinMode(LeftMotorRear2, OUTPUT);
-
-  // dev - Inserindo valor a função do metodo pinout
-
-  LeftMotorRear.pinOut(17, 16);
-
-  // pinMode(RightMotorFront1, OUTPUT);
-  // pinMode(RightMotorFront2, OUTPUT);
-
-  // dev - Inserindo valor a função do metodo pinout
-
-  RightMotorFront.pinOut(19, 18);
-
-  // pinMode(RightMotorRear1, OUTPUT);
-  // pinMode(RightMotorRear2, OUTPUT);
-
-  // dev - Inserindo valor a função do metodo pinout
-
-  RightMotorRear.pinOut(12, 27);
-
-  pinMode(3, OUTPUT);  //nao entendi a interação desses comandos
-  analogWrite(3, LOW); //nao entendi a interação desses comandos
-
-
+  Serial.println("fim setup");
 }
-  // void forward(){
-  // digitalWrite(LeftMotorFront1, HIGH);
-  // digitalWrite(RightMotorFront1, HIGH);
-  // digitalWrite(LeftMotorFront2, LOW);
-  // digitalWrite(RightMotorFront2, LOW);
 
-  // digitalWrite(LeftMotorRear1, HIGH);
-  // digitalWrite(RightMotorRear1, HIGH);
-  // digitalWrite(LeftMotorRear2, LOW);
-  // digitalWrite(RightMotorRear2, LOW);
-  // }
+void loop() 
+{
+  
 
-  void forward(){
-    LeftMotorFront.Forward();
-    RightMotorFront.Forward();
-    LeftMotorRear.Forward();
-    RightMotorRear.Forward();
+  static int counter = 0;
+
+  if (counter < 3)
+  {
+    LeftMotorFront.Speed(SpeedFrontLeft);
+    LeftMotorRear.Speed(SpeedRearLeft);
+    RightMotorFront.Speed(SpeedFrontRight);
+    RightMotorRear.Speed(SpeedRearRight);
+    Serial.print("FIRST IF!!!!!!!  ");
+    forward();
+    delay(1000);
+    counter++;
+  }
+  else if (counter >= 3 && counter < 6)
+  {
+    LeftMotorFront.Speed(MAXSPEED);
+    LeftMotorRear.Speed(MAXSPEED);
+    RightMotorFront.Speed(MAXSPEED);
+    RightMotorRear.Speed(MAXSPEED);
+    Serial.print("SECOND IF!!!!!!!  ");
+    left();
+    delay(1000);
+    counter++;
+  }
+  else if (counter >= 6 && counter < 9)
+  {
+    LeftMotorFront.Speed(SpeedFrontLeft);
+    LeftMotorRear.Speed(SpeedRearLeft);
+    RightMotorFront.Speed(SpeedFrontRight);
+    RightMotorRear.Speed(SpeedRearRight);
+    Serial.print("THIRD IF!!!!!!");
+    back();
+    delay(1000);
+    counter++;
+    
+  }else if (counter >= 9 && counter < 12){
+    LeftMotorFront.Speed(MAXSPEED);
+    LeftMotorRear.Speed(MAXSPEED);
+    RightMotorFront.Speed(MAXSPEED);
+    RightMotorRear.Speed(MAXSPEED);
+    Serial.print("FOURTH IF!!!!!!");
+    right();
+    delay(1000);
+    counter++;
+  }
+  else
+  {
+    stop();
   }
   
 
-// void backward(){
-//   digitalWrite(LeftMotorFront1, LOW);
-//   digitalWrite(RightMotorFront1, LOW);
-//   digitalWrite(LeftMotorFront2, HIGH);
-//   digitalWrite(RightMotorFront2, HIGH);
-
-//   digitalWrite(LeftMotorRear1, LOW);
-//   digitalWrite(RightMotorRear1, LOW);
-//   digitalWrite(LeftMotorRear2, HIGH);
-//   digitalWrite(RightMotorRear2, HIGH);
-// }
-
-  void backward(){
-    LeftMotorFront.Backward();
-    RightMotorFront.Backward();
-    LeftMotorRear.Backward();
-    RightMotorRear.Backward();
-  }
-
-// void left(){
-//   digitalWrite(LeftMotorFront1, LOW);
-//   digitalWrite(RightMotorFront1, HIGH);
-//   digitalWrite(LeftMotorFront2, LOW);
-//   digitalWrite(RightMotorFront2, LOW);
-
-//   digitalWrite(LeftMotorRear1, HIGH);
-//   digitalWrite(RightMotorRear1, HIGH);
-//   digitalWrite(LeftMotorRear2, LOW);
-//   digitalWrite(RightMotorRear2, LOW);
-// }
-
-  void left(){
-    LeftMotorFront.Backward();
-    LeftMotorRear.Backward();
-    RightMotorFront.Forward();
-    RightMotorRear.Forward();
-  }
-
-  void right(){
-    LeftMotorFront.Forward();
-    LeftMotorRear.Forward();
-    RightMotorFront.Backward();
-    RightMotorRear.Backward();
-  }
-
-// void stop(){
-//   digitalWrite(LeftMotorFront1, LOW);
-//   digitalWrite(RightMotorFront1, LOW);
-//   digitalWrite(LeftMotorFront2, LOW);
-//   digitalWrite(RightMotorFront2, LOW);
-
-//   digitalWrite(LeftMotorRear1, LOW);
-//   digitalWrite(RightMotorRear1, LOW);
-//   digitalWrite(LeftMotorRear2, LOW);
-//   digitalWrite(RightMotorRear2, LOW);
-// }
-
-  void stop(){
-    LeftMotorFront.Stop();
-    LeftMotorRear.Stop();
-    RightMotorFront.Stop();
-    RightMotorRear.Stop();
-  }
-
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  //forward();
-  //delay(2000);
-  //backward();
-  //delay(2000);
-  //stop();
-  //delay(4000);
-  right();
-  delay(1000);
-  stop();
-  delay(3000);
+  
 }
+
+void stop(){
+    LeftMotorFront.Stop();  // Comando para o motor parar
+    LeftMotorRear.Stop();   // Comando para o motor parar
+    RightMotorFront.Stop(); // Comando para o motor parar
+    RightMotorRear.Stop();  // Comando para o motor parar
+  }
+
+void forward(){
+    Serial.print("Moving forward  ");
+    Serial.print("spd: ");
+    Serial.println(SpeedFrontLeft);
+    Serial.println(SpeedRearLeft);
+    Serial.println(SpeedFrontRight);
+    Serial.println(SpeedRearRight);
+    LeftMotorFront.Forward();   // Comando para o motor ir para frente
+    LeftMotorRear.Forward();    // Comando para o motor ir para frente
+    RightMotorFront.Forward();  // Comando para o motor ir para frente
+    RightMotorRear.Forward();   // Comando para o motor ir para frente
+  }
+
+void back(){
+    Serial.print("Moving back  ");
+    Serial.print("spd: ");
+    Serial.println(SpeedFrontLeft);
+    Serial.println(SpeedRearLeft);
+    Serial.println(SpeedFrontRight);
+    Serial.println(SpeedRearRight);
+    LeftMotorFront.Backward();  // Comando para o motor ir para trás
+    LeftMotorRear.Backward();   // Comando para o motor ir para trás
+    RightMotorFront.Backward(); // Comando para o motor ir para trás
+    RightMotorRear.Backward();  // Comando para o motor ir para trás
+  }
+
+void left() {
+    Serial.print("Moving left  ");
+    Serial.print("spd: ");
+    Serial.println(SpeedFrontLeft);
+    Serial.println(SpeedRearLeft);
+    Serial.println(SpeedFrontRight);
+    Serial.println(SpeedRearRight);
+    LeftMotorFront.Backward();  // Comando para o motor ir para trás
+    LeftMotorRear.Backward();    // Comando para o motor ir para frente
+    RightMotorFront.Forward();  // Comando para o motor ir para frente
+    RightMotorRear.Forward();  // Comando para o motor ir para trás
+  }
+
+void right() {
+    Serial.print("Moving right  ");
+    Serial.print("spd: ");
+    Serial.println(SpeedFrontLeft);
+    Serial.println(SpeedRearLeft);
+    Serial.println(SpeedFrontRight);
+    Serial.println(SpeedRearRight);
+    LeftMotorFront.Forward();   // Comando para o motor ir para frente
+    LeftMotorRear.Forward();   // Comando para o motor ir para trás
+    RightMotorFront.Backward(); // Comando para o motor ir para trás
+    RightMotorRear.Backward();   // Comando para o motor ir para frente
+  }
