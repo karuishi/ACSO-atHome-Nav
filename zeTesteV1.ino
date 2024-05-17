@@ -82,12 +82,12 @@ void stop(){
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //forward();
-  //delay(2000);
-  //backward();
-  //delay(2000);
-  //stop();
-  //delay(4000);
+  forward();
+  delay(2000);
+  backward();
+  delay(2000);
+  stop();
+  delay(4000);
   left();
   delay(1000);
   stop();
