@@ -1,7 +1,7 @@
 #define HIGH 100 // 0 - 255
 
 class DCMotor {
-    int pin2, pin2;
+    int pin1, pin2;
 
     public:
         //void Pinout(int in1, int in2, int en) { // Pinout é o método para a declaração dos pinos que vão controlar o objeto motor
@@ -94,10 +94,10 @@ void right() {
 void loop(){
     forward();
     delay(2000);
-    stop();
+    Stop();
     delay(2000);
     left();
     delay(1500);
-    stop();
+    Stop();
     delay(1000);
 }
