@@ -1,14 +1,17 @@
 #define LED 13
 
+// 1 forma de setar o valor da velocidade dos motores, onde os valores ficam como "default"
 int SpeedFrontLeft = 150;
 int SpeedFrontRight = 150;
 int SpeedRearLeft = 150;
 int SpeedRearRight = 150;
 
+// Criando a variavel MAXSPEED para setar o maximo da velocidade do motor, foi necessário na hora de ir para a direita e para a esquerda pois na default não havia força suficiente
 int MAXSPEED = 255;
 
 int Speedsec;
 
+// Declarando as variáveis de frequencia, resolução e dos canais do pwm(por motor)
 const int freq = 30000;
 const int pwmChannel = 0;
 const int pwmChannel2 = 1;
@@ -17,10 +20,13 @@ const int pwmChannel4 = 3;
 const int resolution = 8;
 
 class DCMotor{
+
+  // Declarando dentro da classe as variaveis de speed(poderia ser sem valor), da porta logica pinos e do pwm, e do canal pwm para o respectivo motor
   int spd = 100, pin1, pin2, enable1Pin, pwmChannelForThisMotor;
 
   public:
 
+    // Criando o metodo pinOut com função para atribuir valor as variaveis declaradas, "this->" é uma forma de chamar a variavel declarada na classe, e não na metodo/função 
     void pinOut(int in1, int in2, int en, int pwmChannelForThisMotor)
     {
       pin1 = in1;
@@ -33,21 +39,21 @@ class DCMotor{
       pinMode(pin2, OUTPUT);
       pinMode(enable1Pin, OUTPUT);
 
-
+      // Comando do arduino para setar os parametros do pwm(canal, frequencia, resolucao)
       ledcSetup(this->pwmChannelForThisMotor, freq, resolution);
       ledcAttachPin(enable1Pin, this->pwmChannelForThisMotor);
 
     }
 
+    // Metodo speed com a funçao de definir a velocidade do motor
     void Speed(int in1)
     {
       spd = in1;
     }
 
+    // Comando para definir os parametros dos pinos, no caso o pino 1 vai ser atribuido com o valor analogico da velocidade e  2 o comando digital LOW, ledcwrite passa o parametro do canal pwm
     void Forward()
     {
-      //quando colocar o pwm trocar o digitalwrite do pin1 para analogwrite
-      //analogWrite(pin1, spd);
       pinMode(pin1, INPUT);
       pinMode(pin2, INPUT);
       analogWrite(pin1, spd);
@@ -55,11 +61,9 @@ class DCMotor{
       ledcWrite(pwmChannel, spd);
     }
 
+    // Comando para definir os parametros dos pinos, no caso o pino 2 vai ser atribuido com o valor analogico da velocidade e  1 o comando digital LOW, ledcwrite passa o parametro do canal pwm
     void Backward()
     {
-      //quando colocar o pwm trocar o digitalwrite do pin1 para analogwrite
-      //digitalWrite(pin1, LOW); //pin1 gira a roda no sentido horario
-      //digitalWrite(pin1, LOW); //pin1 gira a roda no sentido horario
       pinMode(pin1, INPUT);
       pinMode(pin2, INPUT);
       digitalWrite(pin1, LOW);
@@ -77,11 +81,14 @@ class DCMotor{
     }
 };
 
-DCMotor LeftMotorFront, LeftMotorRear, RightMotorFront, RightMotorRear; //criando os 4 motores(rodas), que vão receber os metodos acima
+DCMotor LeftMotorFront, LeftMotorRear, RightMotorFront, RightMotorRear; //Instanciado os objetos, no caso, os 4 motores(rodas) que vão receber os metodos acima
 
 void setup(){
+
+  // Comandos serial.begin e posteriormente serial.print para acompanharmos a execução dos comandos via terminal e posteriormente realizar as devidas correções
   Serial.begin(9600);
   
+  // Atribuido o valor dos pinos e do pwm, assim como o respectivo canal de cada um
   LeftMotorFront.pinOut(26, 25, 33, pwmChannel);
   LeftMotorRear.pinOut(17, 16, 4, pwmChannel2);
   RightMotorFront.pinOut(19, 18, 23, pwmChannel3);
@@ -96,9 +103,10 @@ void setup(){
 void loop() 
 {
   
-
+  // Criação do contador estático para mudar a direção do Ze a partir das condicionais atribuidas enquanto o loop acontece
   static int counter = 0;
 
+  // Enquanto estiver no intervalo 0,1,2 o Ze seguirá em frente enquanto no painel sera impresso o first if
   if (counter < 3)
   {
     LeftMotorFront.Speed(SpeedFrontLeft);
@@ -110,6 +118,8 @@ void loop()
     delay(1000);
     counter++;
   }
+
+  // Enquanto estiver no intervalo 3,4,5 o Ze irá mover-se para a esquerda enquanto no painel sera impresso o second if, com a mudança do MAXSPEED no local das respectivas variaveis de velocidade
   else if (counter >= 3 && counter < 6)
   {
     LeftMotorFront.Speed(MAXSPEED);
@@ -121,6 +131,8 @@ void loop()
     delay(1000);
     counter++;
   }
+
+  // Enquanto estiver no intervalo 6,7,8 o Ze irá mover-se para trás enquanto no painel sera impresso o third if
   else if (counter >= 6 && counter < 9)
   {
     LeftMotorFront.Speed(SpeedFrontLeft);
@@ -132,7 +144,11 @@ void loop()
     delay(1000);
     counter++;
     
-  }else if (counter >= 9 && counter < 12){
+  }
+  
+  // Enquanto estiver no intervalo 9,10,11 o Ze irá mover-se para a direita enquanto no painel sera impresso o fourth if, com a mudança do MAXSPEED no local das respectivas variaveis de velocidade
+  else if (counter >= 9 && counter < 12)
+  {
     LeftMotorFront.Speed(MAXSPEED);
     LeftMotorRear.Speed(MAXSPEED);
     RightMotorFront.Speed(MAXSPEED);
@@ -142,6 +158,8 @@ void loop()
     delay(1000);
     counter++;
   }
+  
+  // Quando o contador atingir o valor inteiro 12, o Ze irá chamar o Metodo Stop, fazendo- o parar no lugar
   else
   {
     stop();
