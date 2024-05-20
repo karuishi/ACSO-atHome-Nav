@@ -1,0 +1,21 @@
+Resultados do Teste utilizando o seguinte algoritmo no loop:
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  //forward();
+  //delay(2000);
+  //backward();
+  //delay(2000);
+  //stop();
+  //delay(4000);
+  left();
+  delay(1000);
+  stop();
+  delay(3000);
+}
+
+Conlusões:
+1 - O zé andou certa de um palmo para a esquerda com o delay em 1 segundos;
+
+Sugestões:
+1 - Programar o zé para que ande de lado  

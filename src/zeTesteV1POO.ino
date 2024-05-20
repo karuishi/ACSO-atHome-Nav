@@ -84,6 +84,13 @@ void left(){
     RightMotorRear.Forward();  // Comando para o motor ir para trá
 }
 
+void superLeft(){
+    LeftMotorFront.Backward(); // Comando para o motor ir para trás
+    LeftMotorRear.Forward(); // Comando para o motor ir para frente 
+    RightMotorFront.Forward(); // Comando para o motor ir para frente
+    RightMotorRear.Forward(); // Comando para o motor ir para trás
+}
+
 void right() {
     LeftMotorFront.Forward();   // Comando para o motor ir para frente
     LeftMotorRear.Forward();   // Comando para o motor ir para trás
@@ -93,11 +100,43 @@ void right() {
 
 void loop(){
     forward();
-    delay(2000);
+    delay(1000);
     Stop();
-    delay(2000);
-    left();
-    delay(1500);
+    delay(1000);
+
+    superLeft();
+    delay(750);
+    Stop();
+    delay(1000);
+
+    forward();
+    delay(1000);
+    Stop();
+    delay(1000);
+
+
+    superLeft();
+    delay(750);
+    Stop();
+    delay(1000);
+
+    forward();
+    delay(1000);
+    Stop();
+    delay(1000);
+
+    superLeft();
+    delay(750);
+    Stop();
+    delay(1000);
+
+    forward();
+    delay(1000);
+    Stop();
+    delay(1000);
+
+    superLeft();
+    delay(750);
     Stop();
     delay(1000);
 }
