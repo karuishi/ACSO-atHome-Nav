@@ -25,18 +25,6 @@ class DCMotor {
             digitalWrite(pin2, HIGH);
         }
 
-        // Left é o método para fazer o robô ir para a esquerda
-        void Left(){
-            digitalWrite(pin1, LOW);
-            digitalWrite(pin2, HIGH);
-        }
-
-        // Right é o método para fazer o robô ir para a direita
-        void Right(){
-            digitalWrite(pin1, HIGH);
-            digitalWrite(pin2, LOW);
-        }
-
         // Stop é o metodo para fazer o motor ficar parado.
         void Stop(){
             digitalWrite(pin1, LOW);
@@ -56,7 +44,7 @@ void setup(){
   Stop(); //Inicializa com o motor parado.
 }
 
-void Stop(){
+void stop(){
     LeftMotorFront.Stop(); // Comando para o motor parar
     LeftMotorRear.Stop(); // Comando para o motor parar
     RightMotorFront.Stop(); // Comando para o motor parar
@@ -91,52 +79,46 @@ void superLeft(){
     RightMotorRear.Forward(); // Comando para o motor ir para trás
 }
 
-void right() {
-    LeftMotorFront.Forward();   // Comando para o motor ir para frente
-    LeftMotorRear.Forward();   // Comando para o motor ir para trás
-    RightMotorFront.Backward(); // Comando para o motor ir para trás
-    RightMotorRear.Backward();   // Comando para o motor ir para frente
-}
-
 void loop(){
+    // Loop para o Zé formar um quadrado ao andar
     forward();
     delay(1000);
-    Stop();
+    stop();
     delay(1000);
 
     superLeft();
     delay(750);
-    Stop();
+    stop();
     delay(1000);
 
     forward();
     delay(1000);
-    Stop();
+    stop();
     delay(1000);
 
 
     superLeft();
     delay(750);
-    Stop();
+    stop();
     delay(1000);
 
     forward();
     delay(1000);
-    Stop();
+    stop();
     delay(1000);
 
     superLeft();
     delay(750);
-    Stop();
+    stop();
     delay(1000);
 
     forward();
     delay(1000);
-    Stop();
+    stop();
     delay(1000);
 
     superLeft();
     delay(750);
-    Stop();
+    stop();
     delay(1000);
 }
