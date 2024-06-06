@@ -67,10 +67,47 @@ void setup(){
 
 void loop(){
   
+  LeftMotorFront.Speed(Speed);  
+  LeftMotorRear.Speed(Speed);   
+  RightMotorFront.Speed(Speed); 
+  RightMotorRear.Speed(Speed);
 
-  Stop();
+ while(1){
+    delay(500);
+    if (digitalRead(15) == HIGH){
+      Serial.println("ta dboa");
+      forward();
+    }
 
+    if (digitalRead(15) == LOW){
+      Serial.println("vai bater");     
+      Stop();
+      delay(1000);
+      back();
+      delay(500);
+      superleft();
+      delay(250);
+      if (digitalRead(15) == LOW){
+        Stop();
+        delay(1000);
+        back();
+        delay(500);
+        superright();
+        delay(250);
+      }
+    }
+      if (digitalRead(15) == LOW){
+        superright();
+        delay(250);
+          if (digitalRead(15) == LOW) {
+          Stop();
+          delay(1000);
+          superleft();
+          delay(250);
+          }
+      }
   }
+};
 
 void Stop(){
     LeftMotorFront.Stop();  // Comando para o motor parar
