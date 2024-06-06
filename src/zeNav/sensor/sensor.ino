@@ -214,4 +214,8 @@ void backleft() {
   LeftMotorRear.Backward();   // Comando para o motor parar
   RightMotorFront.Stop(); // Comando para o motor parar
   RightMotorRear.Stop();  // Comando para o motor ir para trás
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3080ce23416b6f6b360a73aa07686e3bcaf30d8d
