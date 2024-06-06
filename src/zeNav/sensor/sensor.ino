@@ -1,6 +1,6 @@
 #define LED 13
 
-int Speed = 204;
+int Speed = 120;
 int Speedsec;
 
 const int freq = 30000;
@@ -9,6 +9,7 @@ const int resolution = 8;
 
 class DCMotor{
   int spd = 255, pin1, pin2;
+  int parado = 0;
 
   public:
 
@@ -18,7 +19,7 @@ class DCMotor{
       
       pinMode(pin1, OUTPUT);
       pinMode(pin2, OUTPUT);
-      ledcSetup(pwmChannel, freq, resolution);
+      //ledcSetup(pwmChannel, freq, resolution);
     }
 
     void Speed(int in1){
@@ -44,8 +45,8 @@ class DCMotor{
 
     void Stop() { // Stop é o metodo para fazer o motor ficar parado.
       //Serial.println("Motor stopped");
-      digitalWrite(pin1, LOW);
-      digitalWrite(pin2, LOW);
+      analogWrite(pin1, parado);
+      analogWrite(pin2, parado);
     }
 };
 
@@ -59,35 +60,17 @@ void setup(){
   RightMotorFront.pinOut(19, 18);
   RightMotorRear.pinOut(12, 27);
 
-  pinMode(2, INPUT);
+  pinMode(15, INPUT); //declarando a porta do sensor
 
   Serial.println("fim setup");
-
-  Stop();
 }
 
 void loop(){
   
-  LeftMotorFront.Speed(Speed);  
-  LeftMotorRear.Speed(Speed);   
-  RightMotorFront.Speed(Speed); 
-  RightMotorRear.Speed(Speed);
 
-  int irread = digitalRead(2);
+  Stop();
 
-  Serial.println(irread);
-  delay(1);
-
-  if (irread == 1){ //nada na frente
-    forward();
-    delay(500);
-  };
-
-  if (irread == 0) { //desviar
-    left();
-    delay(500);
-  };
-}
+  }
 
 void Stop(){
     LeftMotorFront.Stop();  // Comando para o motor parar
@@ -135,3 +118,63 @@ void right() {
     RightMotorFront.Backward(); // Comando para o motor ir para trás
     RightMotorRear.Backward();   // Comando para o motor ir para frente
   }
+
+//stationary rotation (spin)-testando
+void superleft() {
+  Serial.print("stationary rotation (spin) - superleft  ");
+  Serial.print("spd: ");
+  Serial.println(Speed);
+  LeftMotorFront.Backward();  // Comando para o motor ir para trás
+  LeftMotorRear.Forward();   // Comando para o motor parar
+  RightMotorFront.Forward(); // Comando para o motor parar
+  RightMotorRear.Backward();  // Comando para o motor ir para trás
+}
+//stationary rotation (spin)-testando
+void superright() {
+  Serial.print("stationary rotation (spin) - superright  ");
+  Serial.print("spd: ");
+  Serial.println(Speed);
+  LeftMotorFront.Forward();  // Comando para o motor parar
+  LeftMotorRear.Backward();   // Comando para o motor parar
+  RightMotorFront.Backward(); // Comando para o motor parar
+  RightMotorRear.Forward();  // Comando para o motor parar
+}
+
+void forwardleft() {
+  Serial.print("Moving forwardleft  ");
+  Serial.print("spd: ");
+  Serial.println(Speed);
+  LeftMotorFront.Stop();  // Comando para o motor parar
+  LeftMotorRear.Stop();    // Comando para o motor ir para frente
+  RightMotorFront.Forward();  // Comando para o motor ir para frente
+  RightMotorRear.Forward();  // Comando para o motor parar
+}
+void forwardright() {
+  Serial.print("Moving forwardright  ");
+  Serial.print("spd: ");
+  Serial.println(Speed);
+  LeftMotorFront.Forward();   // Comando para o motor ir para frente
+  LeftMotorRear.Forward();   // Comando para o motor parar
+  RightMotorFront.Stop();  // Comando para o motor ir para frente
+  RightMotorRear.Stop();   // Comando para o motor ir para frente
+}
+
+void backright() {
+  Serial.print("Moving backright  ");
+  Serial.print("spd: ");
+  Serial.println(Speed);
+  LeftMotorFront.Stop();  // Comando para o motor parar
+  LeftMotorRear.Stop();   // Comando para o motor ir para trás
+  RightMotorFront.Backward(); // Comando para o motor ir para trás
+  RightMotorRear.Backward();  // Comando para o motor parar
+}
+
+void backleft() {
+  Serial.print("Moving backleft  ");
+  Serial.print("spd: ");
+  Serial.println(Speed);
+  LeftMotorFront.Backward();  // Comando para o motor ir para trás
+  LeftMotorRear.Backward();   // Comando para o motor parar
+  RightMotorFront.Stop(); // Comando para o motor parar
+  RightMotorRear.Stop();  // Comando para o motor ir para trás
+}
