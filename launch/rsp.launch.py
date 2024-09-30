@@ -19,7 +19,7 @@ def generate_launch_description():
     pkg_path = os.path.join(get_package_share_directory('mane'))
     xacro_file = os.path.join(pkg_path, 'description', 'robot.urdf.xacro')
     robot_description_config = Command(['xacro ', xacro_file, ' use_ros2_control:=', use_ros2_control])
-    rviz_config_path = os.path.join(pkg_path,'rviz','urdf_config.rviz')
+    # rviz_config_path = os.path.join(pkg_path,'rviz','urdf_config.rviz')
 
 
     #criando o nó do robot_state_publisher
@@ -37,13 +37,13 @@ def generate_launch_description():
         name='joint_state_publisher'
     )
 
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        output='screen',
-        arguments=['-d', LaunchConfiguration('rvizconfig')],
-    )
+    # rviz_node = Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     name='rviz2',
+    #     output='screen',
+    #     arguments=['-d', LaunchConfiguration('rvizconfig')],
+    # )
 
 
     #launch
@@ -56,9 +56,9 @@ def generate_launch_description():
             'use_ros2_control',
             default_value='true',
             description='use ros2_control if true'),
-        DeclareLaunchArgument(name='rvizconfig', default_value=rviz_config_path,
-            description='Absolute path to rviz config file'), 
+        # DeclareLaunchArgument(name='rvizconfig', default_value=rviz_config_path,
+        #     description='Absolute path to rviz config file'), 
         node_robot_state_publisher,
         joint_state_publisher_node,
-        rviz_node
+        # rviz_node
     ])
