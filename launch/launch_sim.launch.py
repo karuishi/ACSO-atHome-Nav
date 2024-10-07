@@ -34,7 +34,7 @@ def generate_launch_description():
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
                                    '-entity', 'my_bot'],
-                        output='screen')
+                        output='screen')   
     
     # Include rviz2 below after creating the view.rviz file or something similar.
     # rviz2 = Node(
@@ -45,6 +45,13 @@ def generate_launch_description():
     #     arguments=['-d', [os.path.join(pkg_dir, 'config', 'config_file.rviz')]]
     # )
 
+    robot_localization = Node(
+        package = 'robot_localization',
+        executable = 'ekf_node',
+        name = 'ekf_filter_node',
+        output = 'screen',
+        parameters = [os.path.join(package_name, 'config/ekf.yaml'), {'use_sim_time': True}]
+    )
 
 
     # Launch them all!
@@ -52,5 +59,6 @@ def generate_launch_description():
         rsp,
         gazebo,
         spawn_entity,
+        robot_localization,
         # rviz2,
     ])
