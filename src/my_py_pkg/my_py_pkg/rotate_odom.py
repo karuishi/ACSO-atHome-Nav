@@ -20,7 +20,7 @@ class RotateRobot(Node):
     def listener_callback(self, msg):
         # Atualiza o ângulo atual do robô com base na mensagem de odometria
         # self.current_angle = msg.pose.pose.orientation.z  
-        self.current_angle = self.
+        # self.current_angle = self.
 
         if self.rotating:
             if abs(self.current_angle - self.target_angle) < 0.1:  # Margem de erro
