@@ -1,0 +1,39 @@
+import launch
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    # Declaração de argumentos de linha de comando
+    arg = DeclareLaunchArgument('namespace', default_value='',
+                                description='Namespace')
+    
+    # Criação dos nós
+    girar_node = Node(
+        package='my_py_pkg',
+        executable='girar_node_exec',
+        name='girar_node',
+        namespace=LaunchConfiguration('namespace'),
+        output='screen'
+    )
+    enviar_sinal = Node(
+        package='my_py_pkg',
+        executable='enviar_sinal_exec',
+        name='enviar_sinal',
+        namespace=LaunchConfiguration('namespace')
+        output='screen'
+    )
+    finish_round = Node(
+        package='my_py_pkg',
+        executable='finish_round_exec',
+        name='finish_round',
+        namespace=LaunchConfiguration('namespace')
+        output='screen' 
+    )
+
+    return launch.LaunchDescription([
+        arg,
+        girar_node,
+        enviar_sinal,
+        finish_round
+    ])

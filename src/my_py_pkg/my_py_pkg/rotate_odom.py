@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from geometry_msgs.msg import Quaternion
+# from geometry_msgs.msg import Quaternion
+from nav_msgs.msg import Odometry
 
 class RotateRobot(Node):
     def __init__(self):
@@ -18,9 +19,15 @@ class RotateRobot(Node):
         self.rotating = False
 
     def listener_callback(self, msg):
+          # Imprimindo todas as informações da mensagem de odometria
+        self.get_logger().info('Eu li: \n%r' % msg)
+
         # Atualiza o ângulo atual do robô com base na mensagem de odometria
-        # self.current_angle = msg.pose.pose.orientation.z  
+        self.current_angle = msg.pose.pose.orientation.z  
         # self.current_angle = self.
+        self.get_logger().info('Publicando rotação em torno do angulo.z: %.2f' % (self.current_angle))
+
+        
 
         if self.rotating:
             if abs(self.current_angle - self.target_angle) < 0.1:  # Margem de erro
