@@ -124,7 +124,7 @@
             </friction>
           </surface>
         </collision>
-        <collision name='base_link_fixed_joint_lump__lidar_link_collision_1'>
+        <collision name='base_link_fixed_joint_lump__laser_link_collision_1'>
           <pose>0 0 0.13 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -154,7 +154,7 @@
             </box>
           </geometry>
         </visual>
-        <visual name='base_link_fixed_joint_lump__lidar_link_visual_1'>
+        <visual name='base_link_fixed_joint_lump__laser_link_visual_1'>
           <pose>0 0 0.13 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -197,7 +197,7 @@
               <argument>--ros-args --remap ~/out:=scan</argument>
             </ros>
             <output_type>sensor_msgs/LaserScan</output_type>
-            <frame_name>lidar_link</frame_name>
+            <frame_name>laser_link</frame_name>
           </plugin>
           <pose>0 0 0.13 0 -0 0</pose>
         </sensor>
