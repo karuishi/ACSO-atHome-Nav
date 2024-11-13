@@ -4,6 +4,7 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 
+from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -11,14 +12,10 @@ from launch.substitutions import Command
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessStart
 
-from launch_ros.actions import Node
-
 
 def generate_launch_description():
-
-    package_name = 'mane'
   
-    # robot_localization = launch_ros.actions.Node(
+    # robot_localization = Node(
     #     package='robot_localization',
     #     executable='ekf_node',
     #     name='ekf_filter_node',
@@ -41,7 +38,7 @@ def generate_launch_description():
     #     ],
     # )
 
-    # static_tf_odom = launch_ros.actions.Node(
+    # static_tf_odom = Node(
     #     package='tf2_ros',
     #     executable='static_transform_publisher',
     #     name='static_transform_publisher',
@@ -140,5 +137,6 @@ def generate_launch_description():
         twist_mux,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
-        delayed_joint_broad_spawner
+        delayed_joint_broad_spawner,
+        #robot_localization
     ])
